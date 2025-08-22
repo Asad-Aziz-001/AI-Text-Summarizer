@@ -1,5 +1,7 @@
 # AI-Text-Summarizer
 
+Live App Link 🔗: https://ai-text-summarizer-9psvmowbxtyrhztwx3v645.streamlit.app/
+
 # **🔹 Features**
 
 Input: User pastes a paragraph/article.
