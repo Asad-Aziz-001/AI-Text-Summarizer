@@ -1,6 +1,6 @@
 # AI-Text-Summarizer
 
-Live App Link 🔗: https://ai-text-summarizer-9psvmowbxtyrhztwx3v645.streamlit.app/
+[![Streamlit App](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-2B82F6?style=for-the-badge)](https://ai-text-summarizer-9psvmowbxtyrhztwx3v645.streamlit.app/)
 
 # **🔹 Features**
 
