@@ -1,6 +1,7 @@
 # AI-Text-Summarizer
 
-[![Streamlit App](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-2B82F6?style=for-the-badge)](https://ai-text-summarizer-9psvmowbxtyrhztwx3v645.streamlit.app/)
+[![Streamlit App](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-blue?style=for-the-badge&labelColor=red)](https://ai-text-summarizer-9psvmowbxtyrhztwx3v645.streamlit.app/)
+
 
 # **🔹 Features**
 
