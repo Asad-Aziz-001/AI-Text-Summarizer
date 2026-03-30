@@ -6,7 +6,7 @@ from transformers import pipeline
 def load_model():
     return pipeline(
         "summarization",
-        model="t5-small",
+        model="sshleifer/distilbart-cnn-12-6",
         device=-1   # ✅ force CPU (important)
     )
 
