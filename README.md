@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![AI Text Summarizer Banner](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,20,24&height=200&section=header&text=AI%20Text%20Summarizer&fontSize=48&fontColor=ffffff&fontAlignY=38&desc=Intelligent%20summarization%20powered%20by%20T5%20%26%20Transformers&descAlignY=58&descSize=16)
+![AI Text Summarizer](https://capsule-render.vercel.app/api?type=waving&color=0a0a0f,7fffb2,3af0ff&height=200&section=header&text=AI%20Text%20Summarizer&fontSize=48&fontColor=ffffff&fontAlignY=38&desc=Intelligent%20summarization%20powered%20by%20T5&descAlignY=58&descSize=16)
 
 <br/>
 
@@ -23,6 +23,7 @@
 > **Paste any text. Get a crisp 2–3 line summary. Instantly.**  
 > Built with T5-Small, HuggingFace Transformers, and Streamlit — deployed on the cloud.
 
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Streamlit%20Cloud-00C7B7?style=for-the-badge)](https://ai-text-summarizer-001.streamlit.app)
 </div>
 
 ---
@@ -32,23 +33,23 @@
 <div align="center">
 
 ```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   ✦ Powered by T5 · Transformers           │
-│                                             │
-│   AI Text                                  │
-│   Summarizer                               │
-│   ──────                                   │
-│                                             │
-│   [ Paste your text here...           ]    │
-│                                  0 chars    │
-│                                             │
-│   ⚡ Generate Summary                      │
-│                                             │
-│   ✦ SUMMARY                                │
-│   Your intelligent summary appears here... │
-│                                             │
-└─────────────────────────────────────────────┘
+┌───────────────────────────────────────────────┐
+│                                               │
+│   ✦ Powered by T5 · Transformers             │
+│                                               │
+│   AI Text                                     │
+│   Summarizer                                  │
+│   ──────                                      │
+│                                               │
+│   [ Paste your text here...           ]       │
+│                                  0 chars      │
+│                                               │
+│   ⚡ Generate Summary                        │
+│                                               │
+│   ✦ SUMMARY                                  │
+│   Your intelligent summary appears here...   │
+│                                              │
+└──────────────────────────────────────────────┘
 ```
 
 </div>
@@ -267,11 +268,14 @@ This project is licensed under the **MIT License** — feel free to use, modify,
 
 <div align="center">
 
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,20,24&height=100&section=footer)
-
-**Made with ❤️ by [Asad Aziz](https://github.com/asad-aziz-001)**
+**Made with ❤️ by [Asad Aziz](https://asad-aziz-001.github.io/Portfolio/)**
 
 [![GitHub](https://img.shields.io/badge/GitHub-asad--aziz--001-181717?style=flat-square&logo=github)](https://github.com/asad-aziz-001)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Asad%20Aziz-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/asad-aziz-ai)
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-asadaziz.dev-7fffb2?style=flat-square&logo=vercel&logoColor=black)](https://asad-aziz-001.github.io/Portfolio/)
+
 
 *If this helped you, please ⭐ star the repo!*
 
