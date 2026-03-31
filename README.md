@@ -208,18 +208,6 @@ summary = summarizer(
 
 ---
 
-## ☁️ Deploy on Streamlit Cloud
-
-1. Push your code to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub repo
-4. Set **Main file path** → `app.py`
-5. Click **Deploy** 🚀
-
-> ⚠️ **Note:** Do NOT use `runtime.txt` for Python version — Streamlit Cloud ignores it. Use `.python-version` file instead if needed.
-
----
-
 ## 🧪 Test Inputs
 
 Try these sample texts to test the app:
