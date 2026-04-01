@@ -4,7 +4,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # ---- PAGE CONFIG ----
-st.set_page_config(page_title="AI Text Summarizer", layout="centered")
+st.set_page_config(page_title="AI Text Summarizer", page_icon="📙", layout="centered")
 
 # ---- CUSTOM CSS ----
 st.markdown("""
