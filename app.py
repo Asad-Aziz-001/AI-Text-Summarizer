@@ -228,12 +228,6 @@ textarea::placeholder { color: var(--muted) !important; opacity: 0.6 !important;
     letter-spacing: 0.05em;
 }
 .footer span { color: var(--accent); }
-
-/* ── Success message styling ── */
-.stSuccess {
-    background: rgba(127,255,178,0.06) !important;
-    border: 1px solid rgba(127,255,178,0.2) !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -242,12 +236,14 @@ textarea::placeholder { color: var(--muted) !important; opacity: 0.6 !important;
 @st.cache_resource
 def load_model():
     try:
-        # Using t5-small is faster and works well for summarization
-        return pipeline(
+        # Using t5-small with proper configuration to avoid warnings
+        summarizer = pipeline(
             "summarization",
             model="t5-small",
-            device=-1  # Use CPU
+            device=-1,  # Use CPU
+            truncation=True  # Explicitly handle truncation
         )
+        return summarizer
     except Exception as e:
         st.error(f"❌ Failed to load model: {e}")
         return None
@@ -264,18 +260,17 @@ if summarizer is None:
 st.markdown('<div class="badge">✦ Powered by T5 · Transformers</div>', unsafe_allow_html=True)
 st.markdown('<h1 class="hero-title">AI Text<br>Summarizer</h1>', unsafe_allow_html=True)
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-st.markdown('<p class="hero-sub">Paste any article, paragraph, or document below.<br>Get a crisp, intelligent 2–3 line summary instantly.</p>', unsafe_allow_html=True)
-
 
 # ---- INPUT CARD ----
 st.markdown('<div class="card"><div class="card-label">Your Text</div>', unsafe_allow_html=True)
 
-# ✅ Fixed: Proper label with visibility collapsed
 input_text = st.text_area(
-    label="Text to summarize",  # Added proper label
+    label="Paste any article, paragraph, or document below.
+    Get a crisp, intelligent 2–3 line summary instantly",
+    
     height=220,
     placeholder="Paste your paragraph or article here...",
-    label_visibility="collapsed"  # Hides label but keeps it for accessibility
+    label_visibility="collapsed"
 )
 
 char_count = len(input_text)
@@ -287,9 +282,18 @@ st.markdown('</div>', unsafe_allow_html=True)
 with st.expander("⚙️ Advanced Settings"):
     col1, col2 = st.columns(2)
     with col1:
-        max_len = st.slider("Maximum summary length", 30, 150, 60, help="Maximum words in summary")
+        # Fixed: Use max_new_tokens instead of max_length to avoid warnings
+        max_new_tokens = st.slider(
+            "Maximum new tokens", 
+            30, 150, 60, 
+            help="Maximum number of tokens in summary"
+        )
     with col2:
-        min_len = st.slider("Minimum summary length", 10, 80, 20, help="Minimum words in summary")
+        min_length = st.slider(
+            "Minimum summary length", 
+            10, 80, 20, 
+            help="Minimum words in summary"
+        )
 
 # ---- BUTTON ----
 summarize_clicked = st.button("⚡ Generate Summary", use_container_width=True)
@@ -310,11 +314,11 @@ if summarize_clicked:
                         text = text[:500]
                         st.info("📏 Text truncated to 500 characters for processing.")
                     
-                    # Generate summary
+                    # Fixed: Use max_new_tokens instead of max_length to avoid warnings
                     result = summarizer(
                         text,
-                        max_length=max_len,
-                        min_length=min_len,
+                        max_new_tokens=max_new_tokens,  # Changed from max_length
+                        min_length=min_length,
                         do_sample=False,
                         truncation=True
                     )
@@ -331,7 +335,11 @@ if summarize_clicked:
                     
                     # Show compression stats
                     compression = (1 - len(summary_text)/len(text)) * 100
-                    st.metric("📊 Compression Rate", f"{compression:.1f}% reduction")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("📊 Compression Rate", f"{compression:.1f}% reduction")
+                    with col2:
+                        st.metric("📝 Summary Length", f"{len(summary_text)} chars")
                     
                 except Exception as e:
                     st.error(f"❌ An error occurred: {str(e)}")
