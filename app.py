@@ -12,7 +12,7 @@ except ImportError:
     from transformers import pipeline
     
 # ---- PAGE CONFIG ----
-st.set_page_config(page_title="AI Text Summarizer", page_icon="📙", layout="centered")
+st.set_page_config(page_title="AI Text Summarizer", page_icon="📝", layout="centered")
 
 # ---- CUSTOM CSS ----
 st.markdown("""
