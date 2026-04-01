@@ -1,8 +1,17 @@
 import streamlit as st
-from transformers import pipeline
 import warnings
 warnings.filterwarnings('ignore')
 
+from transformers import pipeline
+
+# ✅ Fix
+try:
+    from transformers import pipeline
+except ImportError:
+    import subprocess
+    subprocess.run(["pip", "install", "transformers==4.35.2"])
+    from transformers import pipeline
+    
 # ---- PAGE CONFIG ----
 st.set_page_config(page_title="AI Text Summarizer", page_icon="📙", layout="centered")
 
@@ -247,7 +256,7 @@ st.markdown('<p class="hero-sub">Paste any article, paragraph, or document below
 st.markdown('<div class="card"><div class="card-label">Your Text</div>', unsafe_allow_html=True)
 
 input_text = st.text_area(
-    label="",
+    label="Enter text",
     height=220,
     placeholder="Paste your paragraph or article here...",
     label_visibility="collapsed"
