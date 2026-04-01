@@ -260,14 +260,14 @@ if summarizer is None:
 st.markdown('<div class="badge">✦ Powered by T5 · Transformers</div>', unsafe_allow_html=True)
 st.markdown('<h1 class="hero-title">AI Text<br>Summarizer</h1>', unsafe_allow_html=True)
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+st.markdown('<p class="hero-sub">Paste any article, paragraph, or document below.<br>Get a crisp, intelligent 2–3 line summary instantly.</p>', unsafe_allow_html=True)
+
 
 # ---- INPUT CARD ----
 st.markdown('<div class="card"><div class="card-label">Your Text</div>', unsafe_allow_html=True)
 
 input_text = st.text_area(
-    label="Paste any article, paragraph, or document below.
-    Get a crisp, intelligent 2–3 line summary instantly",
-    
+    label="Text to summarize",
     height=220,
     placeholder="Paste your paragraph or article here...",
     label_visibility="collapsed"
