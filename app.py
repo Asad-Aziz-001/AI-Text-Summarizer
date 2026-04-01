@@ -2,14 +2,13 @@ import streamlit as st
 import warnings
 warnings.filterwarnings('ignore')
 
-from transformers import pipeline
-
-# ✅ Fix
+# Fix: Remove duplicate import and handle installation properly
 try:
     from transformers import pipeline
 except ImportError:
     import subprocess
-    subprocess.run(["pip", "install", "transformers==4.35.2"])
+    import sys
+    subprocess.run([sys.executable, "-m", "pip", "install", "transformers==4.36.0", "torch", "sentencepiece"])
     from transformers import pipeline
     
 # ---- PAGE CONFIG ----
@@ -229,6 +228,12 @@ textarea::placeholder { color: var(--muted) !important; opacity: 0.6 !important;
     letter-spacing: 0.05em;
 }
 .footer span { color: var(--accent); }
+
+/* ── Success message styling ── */
+.stSuccess {
+    background: rgba(127,255,178,0.06) !important;
+    border: 1px solid rgba(127,255,178,0.2) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -236,14 +241,24 @@ textarea::placeholder { color: var(--muted) !important; opacity: 0.6 !important;
 # ---- LOAD MODEL ----
 @st.cache_resource
 def load_model():
-    return pipeline(
-        "summarization",
-        model="t5-small",
-        device=-1
-    )
+    try:
+        # Using t5-small is faster and works well for summarization
+        return pipeline(
+            "summarization",
+            model="t5-small",
+            device=-1  # Use CPU
+        )
+    except Exception as e:
+        st.error(f"❌ Failed to load model: {e}")
+        return None
 
+# Initialize model with error handling
 summarizer = load_model()
 
+# Show model status
+if summarizer is None:
+    st.warning("⚠️ Model failed to load. Please check your internet connection and try again.")
+    st.stop()
 
 # ---- HERO SECTION ----
 st.markdown('<div class="badge">✦ Powered by T5 · Transformers</div>', unsafe_allow_html=True)
@@ -255,11 +270,12 @@ st.markdown('<p class="hero-sub">Paste any article, paragraph, or document below
 # ---- INPUT CARD ----
 st.markdown('<div class="card"><div class="card-label">Your Text</div>', unsafe_allow_html=True)
 
+# ✅ Fixed: Proper label with visibility collapsed
 input_text = st.text_area(
-    label="Enter text",
+    label="Text to summarize",  # Added proper label
     height=220,
     placeholder="Paste your paragraph or article here...",
-    label_visibility="collapsed"
+    label_visibility="collapsed"  # Hides label but keeps it for accessibility
 )
 
 char_count = len(input_text)
@@ -267,29 +283,61 @@ st.markdown(f'<div class="char-count">{char_count} characters</div>', unsafe_all
 st.markdown('</div>', unsafe_allow_html=True)
 
 
+# ---- SUMMARY OPTIONS ----
+with st.expander("⚙️ Advanced Settings"):
+    col1, col2 = st.columns(2)
+    with col1:
+        max_len = st.slider("Maximum summary length", 30, 150, 60, help="Maximum words in summary")
+    with col2:
+        min_len = st.slider("Minimum summary length", 10, 80, 20, help="Minimum words in summary")
+
 # ---- BUTTON ----
-summarize_clicked = st.button("⚡ Generate Summary")
+summarize_clicked = st.button("⚡ Generate Summary", use_container_width=True)
 
 
 # ---- RESULT ----
 if summarize_clicked:
-    if input_text.strip():
-        with st.spinner("Thinking..."):
-            result = summarizer(
-                input_text,
-                max_length=60,
-                min_length=20,
-                do_sample=False
-            )
-        summary_text = result[0]['summary_text']
-        st.markdown(f"""
-        <div class="result-box">
-            <div class="result-label">✦ Summary</div>
-            <div class="result-text">{summary_text}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    if input_text and input_text.strip():
+        # Check minimum length
+        if len(input_text.strip()) < 30:
+            st.warning("⚠️ Please enter at least 30 characters for a meaningful summary.")
+        else:
+            with st.spinner("✨ Analyzing text and generating summary..."):
+                try:
+                    # Truncate if too long (t5-small has token limit)
+                    text = input_text.strip()
+                    if len(text) > 500:
+                        text = text[:500]
+                        st.info("📏 Text truncated to 500 characters for processing.")
+                    
+                    # Generate summary
+                    result = summarizer(
+                        text,
+                        max_length=max_len,
+                        min_length=min_len,
+                        do_sample=False,
+                        truncation=True
+                    )
+                    
+                    summary_text = result[0]['summary_text']
+                    
+                    # Display result
+                    st.markdown(f"""
+                    <div class="result-box">
+                        <div class="result-label">✦ Summary</div>
+                        <div class="result-text">{summary_text}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Show compression stats
+                    compression = (1 - len(summary_text)/len(text)) * 100
+                    st.metric("📊 Compression Rate", f"{compression:.1f}% reduction")
+                    
+                except Exception as e:
+                    st.error(f"❌ An error occurred: {str(e)}")
+                    st.info("💡 Try with shorter text or adjust the summary length settings.")
     else:
-        st.warning("⚠️  Please paste some text before summarizing.")
+        st.warning("⚠️ Please paste some text before summarizing.")
 
 
 # ---- FOOTER ----
