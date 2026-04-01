@@ -1,5 +1,7 @@
 import streamlit as st
 from transformers import pipeline
+import warnings
+warnings.filterwarnings('ignore')
 
 # ---- PAGE CONFIG ----
 st.set_page_config(page_title="AI Text Summarizer", layout="centered")
