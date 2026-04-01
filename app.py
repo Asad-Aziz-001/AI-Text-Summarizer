@@ -2,7 +2,7 @@ import streamlit as st
 import warnings
 warnings.filterwarnings('ignore')
 
-# Fix: Remove duplicate import and handle installation properly
+# Fix: Handle transformers import
 try:
     from transformers import pipeline
 except ImportError:
@@ -236,19 +236,19 @@ textarea::placeholder { color: var(--muted) !important; opacity: 0.6 !important;
 @st.cache_resource
 def load_model():
     try:
-        # Using t5-small with proper configuration to avoid warnings
+        # Using t5-small with proper configuration
         summarizer = pipeline(
             "summarization",
             model="t5-small",
-            device=-1,  # Use CPU
-            truncation=True  # Explicitly handle truncation
+            device=-1,
+            truncation=True
         )
         return summarizer
     except Exception as e:
         st.error(f"❌ Failed to load model: {e}")
         return None
 
-# Initialize model with error handling
+# Initialize model
 summarizer = load_model()
 
 # Show model status
@@ -266,6 +266,7 @@ st.markdown('<p class="hero-sub">Paste any article, paragraph, or document below
 # ---- INPUT CARD ----
 st.markdown('<div class="card"><div class="card-label">Your Text</div>', unsafe_allow_html=True)
 
+# ✅ FIXED: Proper string with correct quotes
 input_text = st.text_area(
     label="Text to summarize",
     height=220,
@@ -282,16 +283,20 @@ st.markdown('</div>', unsafe_allow_html=True)
 with st.expander("⚙️ Advanced Settings"):
     col1, col2 = st.columns(2)
     with col1:
-        # Fixed: Use max_new_tokens instead of max_length to avoid warnings
+        # Use max_new_tokens to avoid warnings
         max_new_tokens = st.slider(
-            "Maximum new tokens", 
-            30, 150, 60, 
-            help="Maximum number of tokens in summary"
+            "Summary length (tokens)", 
+            min_value=30,
+            max_value=150,
+            value=60,
+            help="Maximum number of tokens in the summary"
         )
     with col2:
         min_length = st.slider(
             "Minimum summary length", 
-            10, 80, 20, 
+            min_value=10,
+            max_value=80,
+            value=20,
             help="Minimum words in summary"
         )
 
@@ -308,16 +313,16 @@ if summarize_clicked:
         else:
             with st.spinner("✨ Analyzing text and generating summary..."):
                 try:
-                    # Truncate if too long (t5-small has token limit)
+                    # Truncate if too long
                     text = input_text.strip()
                     if len(text) > 500:
                         text = text[:500]
                         st.info("📏 Text truncated to 500 characters for processing.")
                     
-                    # Fixed: Use max_new_tokens instead of max_length to avoid warnings
+                    # Generate summary with proper parameters
                     result = summarizer(
                         text,
-                        max_new_tokens=max_new_tokens,  # Changed from max_length
+                        max_new_tokens=max_new_tokens,
                         min_length=min_length,
                         do_sample=False,
                         truncation=True
@@ -333,10 +338,10 @@ if summarize_clicked:
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # Show compression stats
-                    compression = (1 - len(summary_text)/len(text)) * 100
+                    # Show statistics
                     col1, col2 = st.columns(2)
                     with col1:
+                        compression = (1 - len(summary_text)/len(text)) * 100
                         st.metric("📊 Compression Rate", f"{compression:.1f}% reduction")
                     with col2:
                         st.metric("📝 Summary Length", f"{len(summary_text)} chars")
